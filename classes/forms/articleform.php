@@ -31,6 +31,7 @@ class articleform_form extends moodleform {
         
         global $CFG;
         $mform = $this->_form; //Dont forget the underscore
+        $context = context_system::instance();
 
         // article title field
         $mform->addElement('text', 'article_title', get_string('label_article_title', 'local_article')); //Form element (dataType, name of the element, label)
@@ -43,18 +44,22 @@ class articleform_form extends moodleform {
         $mform->setDefault('article_item',get_string('default_article_item', 'local_article')); //Default value (string is from lang/en folder)
         
         //article image upload field
-        $maxbytes= get_max_upload_sizes();
-        $mform->addElement( 'filemanager','article_pic',
-        get_string('label_article_pic','local_article'), null,
-            [
-                'subdirs' => 0,
-                'maxbytes' => $maxbytes,
-                'areamaxbytes' => 10485760,
-                'maxfiles' => 1,
-                'accepted_types' =>array('image'),
-                // 'return_types' => FILE_INTERNAL | FILE_EXTERNAL,
-            ]
-        );
+        $filemanageropts = array('subdirs' => 0, 'maxbytes' => '0', 'maxfiles' => 1, 'context' => $context);
+        $mform->addElement('filemanager', 'attachment', 'Image Upload', null, $filemanageropts);
+
+        //article image upload field
+        // $maxbytes= get_max_upload_sizes();
+        // $mform->addElement( 'filemanager','attachment',
+        // get_string('label_article_pic','local_article'), null,
+        //     [
+        //         'subdirs' => 0,
+        //         'maxbytes' => $maxbytes,
+        //         'areamaxbytes' => 10485760,
+        //         'maxfiles' => 1,
+        //         'accepted_types' =>'*',
+        //         // 'return_types' => FILE_INTERNAL | FILE_EXTERNAL,
+        //     ]
+        // );
 
         $this->add_action_buttons(); //form submit and cancel buttons
     }
