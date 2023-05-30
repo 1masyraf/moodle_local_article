@@ -24,8 +24,9 @@
 
 
 require_once(__DIR__ . '/../../config.php');
-
+require_once('lib.php');
 require_once($CFG->libdir.'/moodlelib.php');
+
 require_login();
 
 global $DB; //*IMPORTANT* This is needed for querying the database without writing direct statements
@@ -34,66 +35,76 @@ $PAGE-> set_url(new moodle_url('/local/article/view.php')); //set the url to the
 $PAGE-> set_context(\context_system::instance());
 $PAGE-> set_title(get_string('article_view_page_title', 'local_article')); // set title for the page
 
+$context = context_system::instance();
+$PAGE->set_context( $context );
 
 $id = optional_param('id','', PARAM_TEXT); //get the id from the url parameter
 
-// //change this
-$itemid = $id;
-$component_name = 'local_article';
-$filearea = 'attachment';
-
-$sql = "select * from mdl_files where itemid = ? and component = ? and filearea = ? and source is not null ";
-$data = $DB->get_record_sql($sql, array($itemid, $component_name, $filearea));
-
-$fs = get_file_storage();
-
-$fileinfo = array(
-    'component' => $data->component,
-    'filearea' => $data->filearea,     
-    'itemid' => $data->itemid,              
-    'contextid' => $data->contextid, 
-    'filepath' => '/',           
-    'filename' => $data->filename); 
-
-$file = $fs->get_file($fileinfo['contextid'], $fileinfo['component'], $fileinfo['filearea'], 
-$fileinfo['itemid'], $fileinfo['filepath'], $fileinfo['filename']);
-
-
-$filepath = '/' . $file->get_contextid() .
-                            '/' . $file->get_component() .
-                            '/' . $file->get_filearea() .
-                            '/' . $file->get_itemid().
-                            $file->get_filepath() .
-                            $file->get_filename();
-
-$url= $CFG->wwwroot."/pluginfile.php".$filepath;
-
-// $url = moodle_url::make_pluginfile_url(
-//     $file->get_contextid(),
-//     $file->get_component(),
-//     $file->get_filearea(),
-//     $file->get_itemid(),
-//     $file->get_filepath(),
-//     $file->get_filename(),
-//      false   // Do not force download of the file.
-// );
-
 $articleview = $DB->get_records('local_article', ['id' => $id]); //fetch all article data from db
 
+//change this
+// $itemid = $id;
+// $component_name = 'local_article';
+// $filearea = 'attachments';
+
+// $sql = "select * from mdl_files where itemid = ? and component = ? and filearea = ? and source is not null ";
+// $data = $DB->get_record_sql($sql, array($itemid, $component_name, $filearea));
+
+// $fs = get_file_storage();
+
+// $fileinfo = array(
+//     'component' => $data->component,
+//     'filearea' => $data->filearea,     
+//     'itemid' => $data->itemid,              
+//     'contextid' => $data->contextid, 
+//     'filepath' => '/',           
+//     'filename' => $data->filename); 
+
+// $file = $fs->get_file($fileinfo['contextid'], $fileinfo['component'], $fileinfo['filearea'], 
+// $fileinfo['itemid'], $fileinfo['filepath'], $fileinfo['filename']);
+
+// $filepath = '/' . $file->get_contextid() .
+//                             '/' . $file->get_component() .
+//                             '/' . $file->get_filearea() .
+//                             // '/' . $file->get_itemid().
+//                             $file->get_filepath() .
+//                             $file->get_filename();
+
+// $url= $CFG->wwwroot."/pluginfile.php".$filepath;
+
+
 echo $OUTPUT->header(); //header of the page
-echo $url; die();
+
+//Image URL fetching setup -----------------------------------------------------------------
+$fs = get_file_storage();
+if ($files = $fs->get_area_files($context->id, 'local_article', 'attachment', '0' , 'sortorder', false)) {
+
+    //a loop to gather all the files in area files
+    foreach($files as $file) {
+    // Build the File URL. Long process! But extremely accurate.
+	$fileurl = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());
+    // Display the image
+    $url = $fileurl->get_port() ? $fileurl->get_scheme() . '://' . $fileurl->get_host() . $fileurl->get_path() . ':' . $fileurl->get_port() : $fileurl->get_scheme() . '://' . $fileurl->get_host() . $fileurl->get_path();
+    }
+
+} else {
+    //display default image //TODO: find nicer image for this
+	$url = 'https://cdn1.iconfinder.com/data/icons/ui-icon-part-3/128/image-1024.png'; //default image
+}
+//Image URL fetching setup ends here -----------------------------------------------------------------
 
 //*Content Body----------------------------------------------------
 //template context (from local/templates)----------------------------------------------------
 $templatecontext = (object)[
+
     'articleviews' => array_values($articleview), //send the array values from db to mustache template
     'indexURL' => new moodle_url('/local/article/index.php'), //set the list url for navigation
     'deleteURL' => new moodle_url('/local/article/delete.php?id='.$id), //set the list url for navigation
-    'imgURL' => new moodle_url($url),
+    'editURL' => new moodle_url('/local/article/add.php?id='.$id), //set the list url for navigation
+    'imgURL' => new moodle_url($url), //url of image (if there's any)
 ];
 echo $OUTPUT->render_from_template('local_article/view', $templatecontext);
 //template context ends here ----------------------------------------------------------------
 //*Content Body Ends Here----------------------------------------------------
-
 
 echo $OUTPUT->footer(); //footer of the page 

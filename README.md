@@ -1,2 +1,2 @@
-# moodle_local_article
-Article Local Plugin for Moodle
+# moodle_local_todo
+Todo Local Plugin for Moodle (Custom by Wan Asyraf)

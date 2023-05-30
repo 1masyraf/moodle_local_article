@@ -35,7 +35,7 @@ $PAGE-> set_title(get_string('article_add_title', 'local_article')); // set titl
 require_login(); // adding and editing article requires login
 
 //initialize class(es)
-$manage= new manage();
+$manage = new manage();
 
 //get id
 $id = optional_param('id','', PARAM_TEXT); //get the id form url parameter
@@ -44,6 +44,9 @@ $id = optional_param('id','', PARAM_TEXT); //get the id form url parameter
 //display the form here------------------------
 // if no id then it is a new article
 $mform = new articleform_form(); //add form
+$toform = [];
+// if there is an id then show the edit for with save
+$mform = new articleform_form("?id=$id");
 $toform = [];
 //---------------------------------------------
 
@@ -57,12 +60,26 @@ if ($mform->is_cancelled()) {
 //* if the user press submit button 
 elseif ($fromform = $mform->get_data()){
 
-    $manage->add_article($fromform,$mform);
-    
-    //After add or edit a  article, redirect user to list of article with a message (index.php)
-     redirect("/local/article/index.php", 'Article Successfully Added', 10 , \core\output\notification::NOTIFY_SUCCESS);
+     //if id is present, then call edit todo function from classes/manage.php to edit the todo
+     if($id) {
+        $manage->edit_article($id,$fromform);
+    }
+
+   //else call add todo function from classes/manage.php to add a todo
+    else {
+        $manage->add_article($fromform,$mform);
+    }
+    //After add or edit a  todo, redirect user to list of todo with a message (list.php)
+     redirect("/local/article/index.php", 'Changes Saved', 10 , \core\output\notification::NOTIFY_SUCCESS);
 }
-    
+else {
+    if($id){
+        $toform = $DB->get_record('local_article', ['id' => $id]);
+    }
+}
+//set default data
+$mform->set_data($toform);
+
 
 echo $OUTPUT->header(); //header of the page
 
