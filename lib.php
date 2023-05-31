@@ -38,7 +38,6 @@ defined('MOODLE_INTERNAL') || die();
 function local_article_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
     global $DB;
 
-
     if ($context->contextlevel != CONTEXT_SYSTEM) {
         return false;
     }

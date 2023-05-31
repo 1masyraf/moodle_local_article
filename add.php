@@ -34,6 +34,8 @@ $PAGE-> set_title(get_string('article_add_title', 'local_article')); // set titl
 
 require_login(); // adding and editing article requires login
 
+$context = context_system::instance();
+
 //initialize class(es)
 $manage = new manage();
 
@@ -50,6 +52,43 @@ $mform = new articleform_form("?id=$id");
 $toform = [];
 //---------------------------------------------
 
+if (empty($id)) {
+    $entry = (object) [
+        'id' => null,
+    ];
+} else {
+    $entry = $DB->get_records('local_article', ['id' => $id]);
+}
+
+// Get an unused draft itemid which will be used for this form.
+$draftitemid = file_get_submitted_draft_itemid('attachment');
+
+// Copy the existing files which were previously uploaded
+// into the draft area used by this form.
+file_prepare_draft_area(
+    // The $draftitemid is the target location.
+    $draftitemid,
+
+    // The combination of contextid / component / filearea / itemid
+    // form the virtual bucket that files are currently stored in
+    // and will be copied from.
+    $context->id, //contextid
+    'local_article', // component
+    'attachment',  // filearea
+    '0', // itemid
+    [
+        'subdirs' => 0,
+        'maxbytes' => 11111111,
+        'maxfiles' => 1,
+    ]
+);
+
+// Set the itemid of draft area that the files have been moved to.
+$entry->attachment = $draftitemid;
+$mform->set_data($entry);
+
+
+
 //Form data handling --------------------------
 //* when the user press cancel button
 if ($mform->is_cancelled()) {
@@ -62,7 +101,21 @@ elseif ($fromform = $mform->get_data()){
 
      //if id is present, then call edit todo function from classes/manage.php to edit the todo
      if($id) {
+
         $manage->edit_article($id,$fromform);
+
+
+        //For Updating (still WIP)
+        //         $draftitemid = file_get_submitted_draft_itemid('attachment');
+
+        //         file_prepare_draft_area(
+        //           $draftitemid,
+        //           $context->id,
+        //           'local_article',
+        //           'attachment',
+        //           '0',
+        //           array('subdirs' => 0,  'maxfiles' => 1)
+        // );
     }
 
    //else call add todo function from classes/manage.php to add a todo
@@ -76,9 +129,45 @@ else {
     if($id){
         $toform = $DB->get_record('local_article', ['id' => $id]);
     }
+
+    if (empty($id)) {
+        $entry = (object) [
+            'id' => null,
+        ];
+    } else {
+        $entry = $DB->get_record('local_article', ['id' => $id]);
+    }
+    
+    // Get an unused draft itemid which will be used for this form.
+    $draftitemid = file_get_submitted_draft_itemid('attachment');
+    
+    // Copy the existing files which were previously uploaded
+    // into the draft area used by this form.
+    file_prepare_draft_area(
+        // The $draftitemid is the target location.
+        $draftitemid,
+    
+        // The combination of contextid / component / filearea / itemid
+        // form the virtual bucket that files are currently stored in
+        // and will be copied from.
+        $context->id, //contextid
+        'local_article', // component
+        'attachment',  // filearea
+        '0', // itemid
+        [
+            'subdirs' => 0,
+            'maxbytes' => 11111111,
+            'maxfiles' => 1,
+        ]
+    );
+    
+    // Set the itemid of draft area that the files have been moved to.
+    $entry->attachment = $draftitemid;
+    $mform->set_data($entry);
 }
 //set default data
 $mform->set_data($toform);
+// $mform->set_data($entry);
 
 
 echo $OUTPUT->header(); //header of the page

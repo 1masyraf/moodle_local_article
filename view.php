@@ -42,37 +42,6 @@ $id = optional_param('id','', PARAM_TEXT); //get the id from the url parameter
 
 $articleview = $DB->get_records('local_article', ['id' => $id]); //fetch all article data from db
 
-//change this
-// $itemid = $id;
-// $component_name = 'local_article';
-// $filearea = 'attachments';
-
-// $sql = "select * from mdl_files where itemid = ? and component = ? and filearea = ? and source is not null ";
-// $data = $DB->get_record_sql($sql, array($itemid, $component_name, $filearea));
-
-// $fs = get_file_storage();
-
-// $fileinfo = array(
-//     'component' => $data->component,
-//     'filearea' => $data->filearea,     
-//     'itemid' => $data->itemid,              
-//     'contextid' => $data->contextid, 
-//     'filepath' => '/',           
-//     'filename' => $data->filename); 
-
-// $file = $fs->get_file($fileinfo['contextid'], $fileinfo['component'], $fileinfo['filearea'], 
-// $fileinfo['itemid'], $fileinfo['filepath'], $fileinfo['filename']);
-
-// $filepath = '/' . $file->get_contextid() .
-//                             '/' . $file->get_component() .
-//                             '/' . $file->get_filearea() .
-//                             // '/' . $file->get_itemid().
-//                             $file->get_filepath() .
-//                             $file->get_filename();
-
-// $url= $CFG->wwwroot."/pluginfile.php".$filepath;
-
-
 echo $OUTPUT->header(); //header of the page
 
 //Image URL fetching setup -----------------------------------------------------------------

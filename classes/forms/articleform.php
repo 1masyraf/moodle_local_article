@@ -47,20 +47,6 @@ class articleform_form extends moodleform {
         $filemanageropts = array('subdirs' => 0, 'maxbytes' => '0', 'maxfiles' => 1, 'context' => $context);
         $mform->addElement('filemanager', 'attachment', 'Image Upload', null, $filemanageropts);
 
-        //article image upload field
-        // $maxbytes= get_max_upload_sizes();
-        // $mform->addElement( 'filemanager','attachment',
-        // get_string('label_article_pic','local_article'), null,
-        //     [
-        //         'subdirs' => 0,
-        //         'maxbytes' => $maxbytes,
-        //         'areamaxbytes' => 10485760,
-        //         'maxfiles' => 1,
-        //         'accepted_types' =>'*',
-        //         // 'return_types' => FILE_INTERNAL | FILE_EXTERNAL,
-        //     ]
-        // );
-
         $this->add_action_buttons(); //form submit and cancel buttons
     }
 

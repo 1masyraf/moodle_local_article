@@ -28,7 +28,7 @@ class manage {
         //set max upload size
         $maxbytes= get_max_upload_sizes();
         //save the image in the draft area to the db
-        file_save_draft_area_files($newArticleFileID, $systemcontext->id, 'local_article', 'attachment', '0',
+        file_save_draft_area_files($newArticleFileID, $systemcontext->id, 'local_article', 'attachment','0',
         [
           'subdirs' => 0,
           'maxbytes' => $maxbytes,
@@ -40,14 +40,27 @@ class manage {
 
     public function edit_article($id, $fromform){
       global $DB;
+      $systemcontext = context_system::instance();
 
       //if theres id then update
       $updatearticle = $DB->get_record('local_article', ['id' => $id]);
-  
+
       $updatearticle->article_title = $fromform->article_title;
       $updatearticle->article_item = $fromform->article_item;
-      // $updatetodo->todo_status = $fromform->todo_status;
-  
+
+       //?IMAGE HANDLING HERE-------------------------------------------------
+        //get image in draft area in file manager field
+        $editArticleFileID = file_get_submitted_draft_itemid('attachment');
+        //set max upload size
+        $maxbytes= get_max_upload_sizes();
+        //save the image in the draft area to the db
+        file_save_draft_area_files($editArticleFileID, $systemcontext->id, 'local_article', 'attachment','0',
+        [
+          'subdirs' => 0,
+          'maxbytes' => $maxbytes,
+          'maxfiles' => 1,
+      ]);
+
       $DB->update_record('local_article', $updatearticle);
 
       return true;
@@ -66,6 +79,17 @@ class manage {
         if($deletedArticle){
             $DB->commit_delegated_transaction($transaction);
         }
+
+        $context = context_system::instance();
+        $fs = get_file_storage();
+        if ($files = $fs->get_area_files($context->id, 'local_article', 'attachment', '0', 'sortorder', false)) {
+
+          // Look through each file being managed
+          foreach ($files as $file) {
+              $file->delete();
+          }
+        }
+
         return true;
     }
 }
