@@ -24,7 +24,7 @@ class manage {
 
         //?IMAGE HANDLING HERE-------------------------------------------------
         //get image in draft area in file manager field
-        $newArticleFileID = file_get_submitted_draft_itemid('article_pic');
+        $newArticleFileID = file_get_submitted_draft_itemid('attachment');
         //set max upload size
         $maxbytes= get_max_upload_sizes();
         //save the image in the draft area to the db
@@ -37,6 +37,34 @@ class manage {
 
         return true;
     }
+
+    public function edit_article($id, $fromform){
+      global $DB;
+      $systemcontext = context_system::instance();
+
+      //if theres id then update
+      $updatearticle = $DB->get_record('local_article', ['id' => $id]);
+
+      $updatearticle->article_title = $fromform->article_title;
+      $updatearticle->article_item = $fromform->article_item;
+
+       //?IMAGE HANDLING HERE-------------------------------------------------
+        //get image in draft area in file manager field
+        $editArticleFileID = file_get_submitted_draft_itemid('attachment');
+        //set max upload size
+        $maxbytes= get_max_upload_sizes();
+        //save the image in the draft area to the db
+        file_save_draft_area_files($editArticleFileID, $systemcontext->id, 'local_article', 'attachment',$id,
+        [
+          'subdirs' => 0,
+          'maxbytes' => $maxbytes,
+          'maxfiles' => 1,
+      ]);
+
+      $DB->update_record('local_article', $updatearticle);
+
+      return true;
+  }
 
       // Function for deleting article
       public function delete_article($id){

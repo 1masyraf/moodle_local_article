@@ -44,7 +44,7 @@ class articleform_form extends moodleform {
         
         //article image upload field
         $maxbytes= get_max_upload_sizes();
-        $mform->addElement( 'filemanager','article_pic',
+        $mform->addElement( 'filemanager','attachment',
         get_string('label_article_pic','local_article'), null,
             [
                 'subdirs' => 0,
