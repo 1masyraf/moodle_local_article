@@ -37,7 +37,9 @@ $PAGE-> set_title(get_string('article_view_page_title', 'local_article')); // se
 
 $id = optional_param('id','', PARAM_TEXT); //get the id from the url parameter
 
-// //change this
+$articleview = $DB->get_records('local_article', ['id' => $id]); //fetch all article data from db
+
+//-----Fetch URL for displaying image -----
 $itemid = $id;
 $component_name = 'local_article';
 $filearea = 'attachment';
@@ -55,45 +57,29 @@ $fileinfo = array(
     'filepath' => '/',           
     'filename' => $data->filename); 
 
+//fetch the file based on information in $fileinfo variable 
 $file = $fs->get_file($fileinfo['contextid'], $fileinfo['component'], $fileinfo['filearea'], 
 $fileinfo['itemid'], $fileinfo['filepath'], $fileinfo['filename']);
 
-
-$filepath = '/' . $file->get_contextid() .
-                            '/' . $file->get_component() .
-                            '/' . $file->get_filearea() .
-                            '/' . $file->get_itemid().
-                            $file->get_filepath() .
-                            $file->get_filename();
-
-$url= $CFG->wwwroot."/pluginfile.php".$filepath;
-
-// $url = moodle_url::make_pluginfile_url(
-//     $file->get_contextid(),
-//     $file->get_component(),
-//     $file->get_filearea(),
-//     $file->get_itemid(),
-//     $file->get_filepath(),
-//     $file->get_filename(),
-//      false   // Do not force download of the file.
-// );
-
-$articleview = $DB->get_records('local_article', ['id' => $id]); //fetch all article data from db
+$imageData = $file->get_content();
+$base64Data = base64_encode($imageData);
+$dataUrl = 'data:image/jpeg;base64,' . $base64Data;
+//-------------------------------------------------
 
 echo $OUTPUT->header(); //header of the page
-echo $url; die();
 
 //*Content Body----------------------------------------------------
 //template context (from local/templates)----------------------------------------------------
 $templatecontext = (object)[
     'articleviews' => array_values($articleview), //send the array values from db to mustache template
     'indexURL' => new moodle_url('/local/article/index.php'), //set the list url for navigation
-    'deleteURL' => new moodle_url('/local/article/delete.php?id='.$id), //set the list url for navigation
-    'imgURL' => new moodle_url($url),
+    'deleteURL' => new moodle_url('/local/article/delete.php?id='.$id), //set delete url
+    'editURL' => new moodle_url('/local/article/add.php?id='.$id), //set edit url 
+    'imgURL' => new moodle_url($dataUrl), //set img url (if there's any)
 ];
+
 echo $OUTPUT->render_from_template('local_article/view', $templatecontext);
 //template context ends here ----------------------------------------------------------------
 //*Content Body Ends Here----------------------------------------------------
-
 
 echo $OUTPUT->footer(); //footer of the page 
