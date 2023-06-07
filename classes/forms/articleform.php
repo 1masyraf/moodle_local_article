@@ -24,34 +24,44 @@
 
 require_once("$CFG->libdir/formslib.php"); // Load form library
 
-class articleform_form extends moodleform {
+class articleform_form extends moodleform
+{
 
     //add elements to the form
-    public function definition() {
-        
+    public function definition()
+    {
+
         global $CFG;
         $mform = $this->_form; //Dont forget the underscore
 
         // article title field
         $mform->addElement('text', 'article_title', get_string('label_article_title', 'local_article')); //Form element (dataType, name of the element, label)
         $mform->setType('article_title', PARAM_NOTAGS); //Set the type of element
-        $mform->setDefault('article_title',get_string('default_article_title', 'local_article')); //Default value (string is from lang/en folder)
+        $mform->setDefault('article_title', get_string('default_article_title', 'local_article')); //Default value (string is from lang/en folder)
 
-        //article description/item field
+        //article item field
         $mform->addElement('textarea', 'article_item', get_string('label_article_item', 'local_article')); //Form element (dataType, name of the element, label)
         $mform->setType('article_item', PARAM_NOTAGS); //Set the type of element
-        $mform->setDefault('article_item',get_string('default_article_item', 'local_article')); //Default value (string is from lang/en folder)
-        
+        $mform->setDefault('article_item', get_string('default_article_item', 'local_article')); //Default value (string is from lang/en folder)
+
+        //article description field
+        $mform->addElement('textarea', 'article_desc', get_string('label_article_desc', 'local_article')); //Form element (dataType, name of the element, label)
+        $mform->setType('article_desc', PARAM_NOTAGS); //Set the type of element
+        $mform->setDefault('article_desc', get_string('default_article_desc', 'local_article')); //Default value (string is from lang/en folder)
+
         //article image upload field
-        $maxbytes= get_max_upload_sizes();
-        $mform->addElement( 'filemanager','article_pic',
-        get_string('label_article_pic','local_article'), null,
+        $maxbytes = get_max_upload_sizes();
+        $mform->addElement(
+            'filemanager',
+            'attachment',
+            get_string('label_article_pic', 'local_article'),
+            null,
             [
                 'subdirs' => 0,
                 'maxbytes' => $maxbytes,
                 'areamaxbytes' => 10485760,
                 'maxfiles' => 1,
-                'accepted_types' =>array('image'),
+                'accepted_types' => array('image'),
                 // 'return_types' => FILE_INTERNAL | FILE_EXTERNAL,
             ]
         );
@@ -60,7 +70,8 @@ class articleform_form extends moodleform {
     }
 
     //custom validation should be added here
-    function validation($data, $files) {
+    function validation($data, $files)
+    {
         return array();
     }
 }

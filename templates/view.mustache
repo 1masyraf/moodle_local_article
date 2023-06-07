@@ -27,15 +27,19 @@
 }}
 
 {{#articleviews}}
-<strong><h1>TITLE:  {{article_title}}</h1></strong>
-<img src= "{{imgURL}}" style="width: 500px; height: 300px;">
-<h3>DESCRIPTION:  {{article_item}}</h3>
+<table style="width:100%">
+    <tr>
+        <th colspan="2"><h3>{{article_title}}</h3></th>
+    </tr>
+    <tr>
+        <td><img src= "{{imgURL}}" style="width: 450px; height: 250px;"></td>
+        <td>{{article_item}}</td>
+    </tr>
+</table>
 {{/articleviews}}
 
 <br>
 <a href="{{indexURL}}" class="btn btn-primary">Return</a>
 <a href="{{deleteURL}}" class="btn btn-danger">Delete Article</a>
-<a href="{{imgURL}}">Image link</a>
-
-
+<a href="{{editURL}}" class="btn btn-warning">Edit Article</a>
 

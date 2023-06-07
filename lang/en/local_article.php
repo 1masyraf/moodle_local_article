@@ -24,9 +24,17 @@
 
 $string['article_page_title'] = 'Article Page';
 $string['article_add_title'] = 'Create new Article';
+
+//form string labels
 $string['label_article_title'] = 'Article Title';
 $string['label_article_item'] = 'Article Description';
 $string['label_article_pic'] = 'Article Image (Optional)';
-$string['default_article_item'] = 'This is article description';
+$string['label_article_desc'] = 'Article Short Description';
+
+//default value for form
+$string['default_article_item'] = 'Article long text here...';
 $string['default_article_title'] = 'Article title here...';
+$string['default_article_desc'] = 'Some short description...';
+
+//plugin name
 $string['plugin_name'] = 'Article Local Plugin';
