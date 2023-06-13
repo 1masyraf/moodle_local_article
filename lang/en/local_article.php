@@ -24,12 +24,16 @@
 
 $string['article_page_title'] = 'Article Page';
 $string['article_add_title'] = 'Create new Article';
+$string['article_view_page_title'] = 'View Article';
 
 //form string labels
 $string['label_article_title'] = 'Article Title';
 $string['label_article_item'] = 'Article Description';
 $string['label_article_pic'] = 'Article Image (Optional)';
 $string['label_article_desc'] = 'Article Short Description';
+$string['label_article_checkbox'] = 'Redirect Site?';
+$string['label_article_link'] = 'Redirect Link';
+
 
 //default value for form
 $string['default_article_item'] = 'Article long text here...';

@@ -20,8 +20,11 @@ class manage
     $systemcontext = context_system::instance();
 
     $newArticle->article_title = $fromform->article_title;
-    $newArticle->article_item = $fromform->article_item;
+    $newArticle->article_item = $fromform->article_item[text];
     $newArticle->article_desc = $fromform->article_desc;
+    $newArticle->article_checkbox = $fromform->article_checkbox;
+    $newArticle->article_link = $fromform->article_link;
+
 
     $newArticleID = $DB->insert_record('local_article', $newArticle, true, false);
 
@@ -56,8 +59,10 @@ class manage
     $updatearticle = $DB->get_record('local_article', ['id' => $id]);
 
     $updatearticle->article_title = $fromform->article_title;
-    $updatearticle->article_item = $fromform->article_item;
+    $updatearticle->article_item = $fromform->article_item[text];
     $updatearticle->article_desc = $fromform->article_desc;
+    $updatearticle->article_checkbox = $fromform->article_checkbox;
+    $updatearticle->article_link = $fromform->article_link;
 
     //?IMAGE HANDLING HERE-------------------------------------------------
     //get image in draft area in file manager field

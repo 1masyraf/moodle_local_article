@@ -81,6 +81,7 @@ echo $OUTPUT->header(); //header of the page
 //template context (from local/templates)----------------------------------------------------
 $templatecontext = (object)[
     'articles' => array_values($articles), //list of all articles from the database
+'base_url' => $CFG->wwwroot
 ];
 echo $OUTPUT->render_from_template('local_article/article', $templatecontext);
 //template context ends here -----------------------------------------------------------------

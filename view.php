@@ -72,12 +72,28 @@ echo $OUTPUT->header(); //header of the page
 //template context (from local/templates)----------------------------------------------------
 $templatecontext = (object)[
     'articleviews' => array_values($articleview), //send the array values from db to mustache template
-    'indexURL' => new moodle_url('/local/article/index.php'), //set the list url for navigation
-    'deleteURL' => new moodle_url('/local/article/delete.php?id='.$id), //set delete url
-    'editURL' => new moodle_url('/local/article/add.php?id='.$id), //set edit url 
+    'indexURL' => new moodle_url($CFG->wwwroot.'/local/article/index.php'), //set the list url for navigation
+    'deleteURL' => new moodle_url($CFG->wwwroot.'/local/article/delete.php?id='.$id), //set delete url
+    'editURL' => new moodle_url($CFG->wwwroot.'/local/article/add.php?id='.$id), //set edit url 
     'imgURL' => new moodle_url($dataUrl), //set img url (if there's any)
 ];
+?>
+<style>
+    /* Three image containers (use 25% for four, and 50% for two, etc) */
+    .column {
+      float: left;
+      width: 50%;
+      padding: 5px;
+    }
 
+    /* Clear floats after image containers */
+    .row::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+</style>
+<?php
 echo $OUTPUT->render_from_template('local_article/view', $templatecontext);
 //template context ends here ----------------------------------------------------------------
 //*Content Body Ends Here----------------------------------------------------

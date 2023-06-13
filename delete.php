@@ -39,4 +39,4 @@ $manage = new manage();
 
 $manage->delete_article($id);
 
-redirect("/local/article/index.php", 'Article Deleted', 10 , \core\output\notification::NOTIFY_SUCCESS);
+redirect($CFG->wwwroot."/local/article/index.php", 'Article Deleted', 10 , \core\output\notification::NOTIFY_SUCCESS);

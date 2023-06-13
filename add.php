@@ -55,7 +55,7 @@ $toform = [];
 //* when the user press cancel button
 if ($mform->is_cancelled()) {
     //Go back to the list page
-    redirect("/local/article/index.php", '', 10);
+    redirect($CFG->wwwroot . "/local/article/index.php", '', 10);
 }
 
 //* if the user press submit button 
@@ -71,7 +71,7 @@ elseif ($fromform = $mform->get_data()) {
         $manage->add_article($fromform, $mform);
     }
     //After add or edit a  todo, redirect user to list of todo with a message (list.php)
-    redirect("/local/article/index.php", 'Changes Saved', 10, \core\output\notification::NOTIFY_SUCCESS);
+    redirect($CFG->wwwroot . "/local/article/index.php", 'Changes Saved', 10, \core\output\notification::NOTIFY_SUCCESS);
 } else {
     if ($id) {
         $toform = $DB->get_record('local_article', ['id' => $id]);
@@ -109,6 +109,7 @@ elseif ($fromform = $mform->get_data()) {
 
         // Set the itemid of draft area that the files have been moved to.
         $entry->attachment = $draftitemid;
+        $entry->article_item_temp = $entry->article_item;
         $mform->set_data($entry);
     }
 }

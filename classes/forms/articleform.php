@@ -35,17 +35,17 @@ class articleform_form extends moodleform
         $mform = $this->_form; //Dont forget the underscore
 
         // article title field
-        $mform->addElement('text', 'article_title', get_string('label_article_title', 'local_article')); //Form element (dataType, name of the element, label)
+        $mform->addElement('text', 'article_title', get_string('label_article_title', 'local_article'), 'size="100"'); //Form element (dataType, name of the element, label)
         $mform->setType('article_title', PARAM_NOTAGS); //Set the type of element
         $mform->setDefault('article_title', get_string('default_article_title', 'local_article')); //Default value (string is from lang/en folder)
 
         //article item field
-        $mform->addElement('textarea', 'article_item', get_string('label_article_item', 'local_article')); //Form element (dataType, name of the element, label)
+        $mform->addElement('textarea', 'article_item', get_string('label_article_item', 'local_article'), 'wrap="virtual" rows="10" cols="100"'); //Form element (dataType, name of the element, label)
         $mform->setType('article_item', PARAM_NOTAGS); //Set the type of element
         $mform->setDefault('article_item', get_string('default_article_item', 'local_article')); //Default value (string is from lang/en folder)
 
         //article description field
-        $mform->addElement('textarea', 'article_desc', get_string('label_article_desc', 'local_article')); //Form element (dataType, name of the element, label)
+        $mform->addElement('textarea', 'article_desc', get_string('label_article_desc', 'local_article'), 'wrap="virtual" rows="2" cols="100"'); //Form element (dataType, name of the element, label)
         $mform->setType('article_desc', PARAM_NOTAGS); //Set the type of element
         $mform->setDefault('article_desc', get_string('default_article_desc', 'local_article')); //Default value (string is from lang/en folder)
 
@@ -65,6 +65,14 @@ class articleform_form extends moodleform
                 // 'return_types' => FILE_INTERNAL | FILE_EXTERNAL,
             ]
         );
+
+        //article checkbox field
+        $mform->addElement('advcheckbox', 'article_checkbox', "", get_string('label_article_checkbox', 'local_article'), array('group' => 1), array(0, 1));
+
+        // article link field
+        $mform->addElement('text', 'article_link', get_string('label_article_link', 'local_article'), 'size="100"'); //Form element (dataType, name of the element, label)
+        $mform->setType('article_link', PARAM_NOTAGS); //Set the type of element
+
 
         $this->add_action_buttons(); //form submit and cancel buttons
     }

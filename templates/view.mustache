@@ -27,15 +27,11 @@
 }}
 
 {{#articleviews}}
-<table style="width:100%">
-    <tr>
-        <th colspan="2"><h3>{{article_title}}</h3></th>
-    </tr>
-    <tr>
-        <td><img src= "{{imgURL}}" style="width: 450px; height: 250px;"></td>
-        <td>{{article_item}}</td>
-    </tr>
-</table>
+<h3>{{article_title}}</h3>
+<div class="row">
+<div class="column"><img src= "{{imgURL}}"></div>
+<div class="column" style="text-align:justify">{{{article_item}}}</div>
+</div>
 {{/articleviews}}
 
 <br>
